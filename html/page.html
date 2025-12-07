@@ -6,10 +6,21 @@
     <title>Document</title>
   </head>
   <body>
+    {{ $test := "test" }}
+    <h1>Переменная test: {{ $test }}</h1>
+    <hr />
+
     <h1>Names (primitive type)</h1>
     {{ range .Names }}
     <p>{{ . }}</p>
     {{ end }}
+    <hr />
+
+    {{ $test = "test2" }}
+    <h1>
+      Применение функции ToUpperCase на измененной переменной test: {{ $test |
+      ToUpperCase }}
+    </h1>
     <hr />
 
     <h1>Users (complex type)</h1>

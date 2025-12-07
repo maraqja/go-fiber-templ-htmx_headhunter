@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -59,6 +61,11 @@ func main() {
 	// Инициализация HTML шаблонизатора: указываем директорию с шаблонами и их расширение
 	// html.New принимает путь к папке с шаблонами и расширение файлов шаблонов
 	htmlEngine := html.New("./html", ".html")
+	htmlEngine.AddFuncMap(map[string]any{
+		"ToUpperCase": func(name string) string {
+			return strings.ToUpper(name)
+		},
+	})
 
 	// Создание Fiber приложения с конфигурацией шаблонизатора
 	// Views позволяет использовать метод c.Render() в обработчиках для рендеринга HTML шаблонов
