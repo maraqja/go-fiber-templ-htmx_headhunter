@@ -34,6 +34,9 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 	// return c.Send(tmp.Bytes())
 	return c.Render("page", fiber.Map{
 		"Message": "Hello, World!",
+		"IsAdmin": true,
+		"CanUse":  true,
+		"Count":   15,
 	})
 
 }
