@@ -1,11 +1,7 @@
 package home
 
 import (
-	"bytes"
-	"text/template"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/rs/zerolog/log"
 )
 
 type HomeHandler struct {
@@ -20,22 +16,24 @@ func NewHomeHandler(router fiber.Router) *HomeHandler {
 }
 
 func (h *HomeHandler) home(c *fiber.Ctx) error {
-	tmpl := template.Must(template.ParseFiles("./html/page.html"))
-	var tmp bytes.Buffer
-	if err := tmpl.Execute(&tmp, map[string]string{
+	// log.Info().
+	// 	Bool("is_home", true).
+	// 	Int("status_code", fiber.StatusOK).
+	// 	Str("ip", c.IP()).
+	// 	Str("user_agent", c.Get("User-Agent")).
+	// 	Msg("GET /api/ - get home") // в zerolog используется паттерн билдера для построения сообщения
+	// ------------------------------------------------------------------------------------------------
+	// tmpl := template.Must(template.ParseFiles("./html/page.html"))
+	// var tmp bytes.Buffer
+	// if err := tmpl.Execute(&tmp, fiber.Map{
+	// 	"Message": "Hello, World!",
+	// }); err != nil {
+	// 	return fiber.NewError(fiber.StatusInternalServerError, "failed to execute template")
+	// }
+	// c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
+	// return c.Send(tmp.Bytes())
+	return c.Render("page", fiber.Map{
 		"Message": "Hello, World!",
-	}); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "failed to execute template")
-	}
-	c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
-	return c.Send(tmp.Bytes())
-	log.Info().
-		Bool("is_home", true).
-		Int("status_code", fiber.StatusOK).
-		Str("ip", c.IP()).
-		Str("user_agent", c.Get("User-Agent")).
-		Msg("GET /api/ - get home") // в zerolog используется паттерн билдера для построения сообщения
-	return c.JSON(fiber.Map{
-		"message": "Hello, World!",
 	})
+
 }
