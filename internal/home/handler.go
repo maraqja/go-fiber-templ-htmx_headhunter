@@ -2,7 +2,7 @@ package home
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/rs/zerolog/log"
 )
 
 type HomeHandler struct {
@@ -19,7 +19,13 @@ func NewHomeHandler(router fiber.Router) *HomeHandler {
 func (h *HomeHandler) home(c *fiber.Ctx) error {
 	// panic("failed to get home")
 	// return fiber.NewError(fiber.StatusBadRequest, "failed to get home")
-	log.Info("GET /api/ - get home")
+
+	log.Info().
+		Bool("is_home", true).
+		Int("status_code", fiber.StatusOK).
+		Str("ip", c.IP()).
+		Str("user_agent", c.Get("User-Agent")).
+		Msg("GET /api/ - get home") // в zerolog используется паттерн билдера для построения сообщения
 	return c.JSON(fiber.Map{
 		"message": "Hello, World!",
 	})

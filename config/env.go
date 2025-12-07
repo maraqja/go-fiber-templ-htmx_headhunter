@@ -4,16 +4,18 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog/log"
 )
 
 func LoadEnvFile() {
 	if err := godotenv.Load(); err != nil {
-		log.Warn("Failed to load .env file: ", err)
+		log.Warn().
+			Err(err).
+			Msg("Failed to load .env file")
 		return
 	}
-	log.Info("Loaded .env file")
+	log.Info().Msg("Loaded .env file")
 }
 
 func getStringEnv(key string, defaultValue string) string {
@@ -27,7 +29,10 @@ func getIntEnv(key string, defaultValue int) (int, error) {
 	if value, exists := os.LookupEnv(key); exists {
 		intValue, err := strconv.Atoi(value)
 		if err != nil {
-			log.Error("Failed to convert environment variable to int", err)
+			log.Error().
+				Err(err).
+				Str("key", key).
+				Msg("Failed to convert environment variable to int")
 			return 0, err
 		}
 		return intValue, nil
@@ -39,7 +44,10 @@ func getBoolEnv(key string, defaultValue bool) (bool, error) {
 	if value, exists := os.LookupEnv(key); exists {
 		boolValue, err := strconv.ParseBool(value)
 		if err != nil {
-			log.Error("Failed to convert environment variable to bool", err)
+			log.Error().
+				Err(err).
+				Str("key", key).
+				Msg("Failed to convert environment variable to bool")
 			return false, err
 		}
 		return boolValue, nil
@@ -58,15 +66,24 @@ func NewDatabaseConfig() *DatabaseConfig {
 }
 
 type LogConfig struct {
-	Level int
+	Level  int
+	Output string
+	Format string
 }
 
 func NewLogConfig() (*LogConfig, error) {
-	logLevelFallback := int(log.LevelTrace)
-	level, err := getIntEnv("LOG_LEVEL", logLevelFallback)
+	level, err := getIntEnv("LOG_LEVEL", 0)
 	if err != nil {
-		log.Error("Failed to get log level", err)
+		log.Error().
+			Err(err).
+			Msg("Failed to get log level")
 		return nil, err
 	}
-	return &LogConfig{Level: level}, nil
+	output := getStringEnv("LOG_OUTPUT", "stdout")
+	format := getStringEnv("LOG_FORMAT", "json")
+	return &LogConfig{
+		Level:  level,
+		Output: output,
+		Format: format,
+	}, nil
 }
