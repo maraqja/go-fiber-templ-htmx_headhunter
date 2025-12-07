@@ -1,6 +1,9 @@
 package home
 
 import (
+	"bytes"
+	"text/template"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 )
@@ -19,7 +22,19 @@ func NewHomeHandler(router fiber.Router) *HomeHandler {
 func (h *HomeHandler) home(c *fiber.Ctx) error {
 	// panic("failed to get home")
 	// return fiber.NewError(fiber.StatusBadRequest, "failed to get home")
-
+	tmpl, err := template.New("home").Parse(`
+		{{ .Message }} - сгенерировано с помощью Go templates
+	`)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "failed to parse template")
+	}
+	var tmp bytes.Buffer
+	if err := tmpl.Execute(&tmp, map[string]string{
+		"Message": "Hello, World!",
+	}); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "failed to execute template")
+	}
+	return c.Send(tmp.Bytes())
 	log.Info().
 		Bool("is_home", true).
 		Int("status_code", fiber.StatusOK).
