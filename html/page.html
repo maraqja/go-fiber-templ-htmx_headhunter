@@ -6,29 +6,16 @@
     <title>Document</title>
   </head>
   <body>
-    {{ .Message }} - сгенерировано с помощью Go templates
-    <br />
-
-    {{ if .IsAdmin}}
-    <p>Вы админ</p>
-    {{ else }}
-    <p>Вы не админ</p>
+    <h1>Names (primitive type)</h1>
+    {{ range .Names }}
+    <p>{{ . }}</p>
     {{ end }}
-    <br />
+    <hr />
 
-    {{ if eq .Count 0 }}
-    <p>Нет данных</p>
-    {{ else if lt .Count 10 }}
-    <p>Меньше 10</p>
-    {{ else if gt .Count 10 }}
-    <p>Больше 10</p>
-    {{ else }}
-    <p>Равно 10</p>
+    <h1>Users (complex type)</h1>
+    {{ range .Users }}
+    <p>{{ .Name }} - {{ .Age }} - {{ .Email }}</p>
     {{ end }}
-    <br />
-
-    {{ if and .IsAdmin .CanUse }}
-    <p>Вы админ и можете использовать эту функцию</p>
-    {{ end }}
+    <hr />
   </body>
 </html>

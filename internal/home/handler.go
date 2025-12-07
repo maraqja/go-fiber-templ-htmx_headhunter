@@ -32,11 +32,27 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 	// }
 	// c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 	// return c.Send(tmp.Bytes())
+	names := []string{
+		"John",
+		"Jane",
+		"Jim",
+		"Jill",
+	}
+
+	users := []struct {
+		Name  string
+		Age   int
+		Email string
+	}{
+		{Name: "John", Age: 30, Email: "john@example.com"},
+		{Name: "Jane", Age: 25, Email: "jane@example.com"},
+		{Name: "Jim", Age: 35, Email: "jim@example.com"},
+		{Name: "Jill", Age: 40, Email: "jill@example.com"},
+	}
+
 	return c.Render("page", fiber.Map{
-		"Message": "Hello, World!",
-		"IsAdmin": true,
-		"CanUse":  true,
-		"Count":   15,
+		"Names": names,
+		"Users": users,
 	})
 
 }
