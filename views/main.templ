@@ -1,10 +1,13 @@
 package views
 
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
+import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/layout"
 
 templ Main() {
 	<div>
-		@components.Title(components.TitleProps{Title: "Найди работы своей мечты"})
+		@layout.Header() {
+			@components.Title(components.TitleProps{Title: "Найди работы своей мечты"})
+		}
 		Main
 	</div>
 }
