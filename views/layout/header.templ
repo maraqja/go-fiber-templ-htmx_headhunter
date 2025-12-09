@@ -1,15 +1,14 @@
 package layout
 
-import "fmt"
-
 
 css headerClass(percent int) {
-	background-color: { "red"};
-	width: { fmt.Sprintf("%d%%", percent) };
+	background: { "#222222"};
+	text-align: { "center"};
 }
 
 templ Header() {
 	<div class={headerClass(50)}>
+		@Menu()
 		 { children... } // То что будет обернуто в тег Header будет помещено сюда
 	</div>	
 }

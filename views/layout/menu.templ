@@ -1,0 +1,43 @@
+package layout
+
+
+templ Menu() {
+	@MenuStyle()
+	<div class="menu">
+		<div class="menu__logo">Logo</div>
+		<div class="menu__right">
+			<a class="menu__right-link">Войти</a>
+		</div>
+	</div>
+}
+
+
+
+// хотя можно просто писать стили внутри Menu() в теге <style>, но так лучше отделяемо
+templ MenuStyle() { 
+	<style>
+		.menu {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 20px;
+		}
+		.menu__right {
+			display: flex;
+			gap: 20px
+		}
+		.menu__right-link {
+			color: #FFFFFF;
+			text-decoration: none;
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.menu__right-link:hover {
+			color: #FFFFFF;
+			text-decoration: none;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+	</style>
+}
