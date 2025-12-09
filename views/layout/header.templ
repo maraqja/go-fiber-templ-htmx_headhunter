@@ -1,7 +1,15 @@
 package layout
 
+import "fmt"
+
+
+css headerClass(percent int) {
+	background-color: { "red"};
+	width: { fmt.Sprintf("%d%%", percent) };
+}
+
 templ Header() {
-	<div class="header">
+	<div class={headerClass(50)}>
 		 { children... } // То что будет обернуто в тег Header будет помещено сюда
 	</div>	
 }
