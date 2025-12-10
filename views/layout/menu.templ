@@ -1,12 +1,17 @@
 package layout
 
+import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
+
 
 templ Menu() {
 	@MenuStyle()
 	<div class="menu">
-		<div class="menu__logo">Logo</div>
+		<img src="/static/assets/logo.svg" alt="Logo">
 		<div class="menu__right">
 			<a class="menu__right-link">Войти</a>
+			@components.LinkButton("/register") {
+				<span>Зарегистрироваться</span>
+			}
 		</div>
 	</div>
 }
@@ -20,11 +25,14 @@ templ MenuStyle() {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			padding: 20px;
+			padding: 20px 0;
+			max-width: 1200px;
+			width: 100%;
 		}
 		.menu__right {
 			display: flex;
-			gap: 20px
+			gap: 20px;
+			align-items: center;
 		}
 		.menu__right-link {
 			color: #FFFFFF;

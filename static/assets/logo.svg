@@ -1,0 +1,16 @@
+<svg width="128" height="128" viewBox="0 0 128 128"
+     xmlns="http://www.w3.org/2000/svg">
+  <!-- Обводка лупы (основной цвет проекта) -->
+  <circle cx="52" cy="52" r="28"
+          fill="none" stroke="#309689" stroke-width="4"/>
+  <!-- Голова человека (белый для темного фона) -->
+  <circle cx="52" cy="46" r="10" fill="#FFFFFF"/>
+  <!-- Тело/плечи -->
+  <path d="M34 72C36 60 44 54 52 54C60 54 68 60 70 72"
+        fill="none" stroke="#FFFFFF" stroke-width="4"
+        stroke-linecap="round"/>
+  <!-- Ручка лупы (основной цвет проекта) -->
+  <line x1="72" y1="72" x2="96" y2="96"
+        stroke="#309689" stroke-width="6"
+        stroke-linecap="round"/>
+</svg>
