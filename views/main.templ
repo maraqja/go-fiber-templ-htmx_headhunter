@@ -4,11 +4,17 @@ import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/layout"
 
 templ Main() {
-	<div>
-		@layout.Header() {
-			@components.Title( "Найди работы своей мечты")
-			@components.SubTitle( "Простой поиск работы")
-		}
-		Main
-	</div>
+	@layout.Layout(layout.LayoutProps{
+		Title: "Headhunter",
+		Description: "Headhunter",
+	}) {
+		<main>
+			@layout.Header() {
+				@components.Title( "Найди работы своей мечты")
+				@components.SubTitle( "Простой поиск работы")
+			}
+			Main
+		</main>
+	}
+
 }
