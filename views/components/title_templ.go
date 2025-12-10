@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 func titleClass() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder := templruntime.GetBuilder()
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`color`, "#FFFFFF")))
+	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`color`, templ.SafeCSSProperty("var(--color-white)"))))
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`font-size`, "70px")))
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`font-width`, "bold")))
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`margin-bottom`, "12px")))
