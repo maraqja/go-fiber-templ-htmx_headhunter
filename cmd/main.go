@@ -56,6 +56,7 @@ func main() {
 	}
 
 	app := fiber.New()
+	app.Static("/static", "./static")
 
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
 		Logger: &log.Logger,
