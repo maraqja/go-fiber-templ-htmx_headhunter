@@ -2,6 +2,8 @@
   --color-white: #ffffff;
   --color-primary: #309689;
   --color-primary-hover: #267a71;
+  --color-black: #000000;
+  --color-gray: #808080;
 }
 
 body {

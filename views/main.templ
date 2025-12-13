@@ -2,8 +2,23 @@ package views
 
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/layout"
+import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/widgets"
+
+
+templ MainStyle() {
+<style>
+	.main__submit-form {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(48, 150, 137, 0.10);
+		padding: 60px 0 120px 0;
+	}
+</style>
+}
 
 templ Main() {
+	@MainStyle()
 	@layout.Layout(layout.LayoutProps{
 		Title: "Headhunter",
 		Description: "Headhunter",
@@ -13,8 +28,12 @@ templ Main() {
 				@components.Title( "Найди работы своей мечты")
 				@components.SubTitle( "Простой поиск работы")
 			}
-			Main
+			<div class="main__submit-form">
+				@widgets.VacancyForm()
+			</div>
 		</main>
 	}
 
 }
+
+
