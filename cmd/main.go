@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/config"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/home"
+	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/logger"
 	"github.com/rs/zerolog/log"
 )
@@ -65,6 +66,7 @@ func main() {
 	_ = config.NewDatabaseConfig()
 
 	home.NewHomeHandler(app)
+	vacancy.NewVacancyHandler(app)
 
 	app.Listen(":3000")
 }
