@@ -2,10 +2,12 @@ package vacancy
 
 import (
 	"github.com/a-h/templ"
+	"github.com/gobuffalo/validate"
+	"github.com/gobuffalo/validate/validators"
 	"github.com/gofiber/fiber/v2"
 	templadapter "github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/templ_adapter"
+	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/validator"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
-	"github.com/rs/zerolog/log"
 )
 
 type VacancyHandler struct {
@@ -20,13 +22,17 @@ func NewVacancyHandler(router fiber.Router) *VacancyHandler {
 }
 
 func (h *VacancyHandler) createVacancy(c *fiber.Ctx) error {
-	email := c.FormValue("email")
-	log.Logger.Info().Str("email", email).Msg("Creating vacancy")
+	form := VacancyCreateForm{
+		Email: c.FormValue("email"),
+	}
+	errors := validate.Validate(
+		&validators.EmailIsPresent{Name: "email", Field: form.Email},
+	)
 	var component templ.Component
-	if email == "" {
-		component = components.Notification("Email is required", components.NotificationStatusError)
+	if len(errors.Errors) > 0 {
+		component = components.Notification(validator.FormatErrors(errors), components.NotificationStatusError)
 		return templadapter.Render(c, component)
 	}
 	component = components.Notification("Vacancy created", components.NotificationStatusSuccess)
-	return templadapter.Render(c, component) // Возвращаем html, который будет отображен в div с id="vacancy-result" с помощью hx-swap="innerHTML"
+	return templadapter.Render(c, component)
 }
