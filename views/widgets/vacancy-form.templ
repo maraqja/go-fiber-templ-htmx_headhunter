@@ -36,7 +36,8 @@ templ VacancyForm() {
 				})
 			</div>
 			@components.SubmitButton() {
-			<span>Опубликовать</span>
+			<div class="vacancy-form__submit"><span>Опубликовать</span></div> // При сабмите формы на форму добавляется класс htmx-request
+			<div class="vacancy-form__loader"></div>
 			}
 		</form>
 	</div>
@@ -70,5 +71,30 @@ templ VacancyFormStyle() {
 		gap: 30px 24px;
 		margin-bottom: 30px;
 	}
+
+	.htmx-request .vacancy-form__submit {
+		display: none;
+	}
+
+	.vacancy-form__loader {
+		display: none;
+	}
+
+    // стиль применяется к элементу .vacancy-form__loader, только если он находится внутри элемента с классом .htmx-request
+	.htmx-request .vacancy-form__loader {
+		display: inline-block;
+		width: 24px;
+		height: 24px;
+		border: 3px solid rgba(48, 150, 137, 0.2);
+		border-top-color: var(--color-primary);
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}	
 </style>
 }

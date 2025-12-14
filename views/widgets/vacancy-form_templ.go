@@ -105,7 +105,7 @@ func VacancyForm() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span>Опубликовать</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"vacancy-form__submit\"><span>Опубликовать</span></div> <div class=\"vacancy-form__loader\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -144,7 +144,7 @@ func VacancyFormStyle() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<style>\n\t.vacancy-form__text {\n\t\toverflow: hidden;\n\t\tcolor: var(--color-black);\n\t\ttext-align: center;\n\t\twhite-space: nowrap;\n\t\tfont-size: 16px;\n\t\tfont-weight: 400;\n\t\tmargin-bottom: 60px;\n\t}\n\t.vacancy-form {\n\t\tmax-width: 890px;\n\t\twidth: 100%;\n\t}\n\t.vacancy-form form {\n\t\tdisplay: flex;\n\t\tflex-direction: column;\n\t\talign-items: center;\n\t\tjustify-content: center;\n\t}\n\t.vacancy-form__inputs {\n\t\twidth: 100%;\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 1fr 1fr;\n\t\tgap: 30px 24px;\n\t\tmargin-bottom: 30px;\n\t}\n</style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<style>\n\t.vacancy-form__text {\n\t\toverflow: hidden;\n\t\tcolor: var(--color-black);\n\t\ttext-align: center;\n\t\twhite-space: nowrap;\n\t\tfont-size: 16px;\n\t\tfont-weight: 400;\n\t\tmargin-bottom: 60px;\n\t}\n\t.vacancy-form {\n\t\tmax-width: 890px;\n\t\twidth: 100%;\n\t}\n\t.vacancy-form form {\n\t\tdisplay: flex;\n\t\tflex-direction: column;\n\t\talign-items: center;\n\t\tjustify-content: center;\n\t}\n\t.vacancy-form__inputs {\n\t\twidth: 100%;\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 1fr 1fr;\n\t\tgap: 30px 24px;\n\t\tmargin-bottom: 30px;\n\t}\n\n\t.htmx-request .vacancy-form__submit {\n\t\tdisplay: none;\n\t}\n\n\t.vacancy-form__loader {\n\t\tdisplay: none;\n\t}\n\n    // стиль применяется к элементу .vacancy-form__loader, только если он находится внутри элемента с классом .htmx-request\n\t.htmx-request .vacancy-form__loader {\n\t\tdisplay: inline-block;\n\t\twidth: 24px;\n\t\theight: 24px;\n\t\tborder: 3px solid rgba(48, 150, 137, 0.2);\n\t\tborder-top-color: var(--color-primary);\n\t\tborder-radius: 50%;\n\t\tanimation: spin 0.8s linear infinite;\n\t}\n\n\t@keyframes spin {\n\t\tto {\n\t\t\ttransform: rotate(360deg);\n\t\t}\n\t}\t\n</style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
