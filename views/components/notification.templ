@@ -1,10 +1,20 @@
 package components
 
-templ Notification(message string) {
-	@NotificationStyle()
-	<div class="notification notification-success">{message}</div>
-}
+type NotificationStatus string
 
+const (
+	NotificationStatusSuccess NotificationStatus = "success"
+	NotificationStatusError   NotificationStatus = "error"
+)
+
+templ Notification(message string, status NotificationStatus) {
+	@NotificationStyle()
+	<div class={
+		"notification",
+		templ.KV("notification-success", status == NotificationStatusSuccess),
+		templ.KV("notification-error", status == NotificationStatusError),
+	}>{message}</div>
+}
 templ NotificationStyle() {
 	<style>
 		.notification {
@@ -19,7 +29,7 @@ templ NotificationStyle() {
 		}
 
 		.notification-error {
-			background-color: #ff0000;
+			background-color: var(--color-error);
 		}
 	</style>
 }
