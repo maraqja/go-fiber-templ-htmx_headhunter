@@ -12,18 +12,31 @@ import (
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 )
 
-type VacancyHandler struct {
-	router fiber.Router
+type IRepository interface {
+	CreateVacancy(form VacancyCreateForm)
 }
 
-func NewVacancyHandler(router fiber.Router) *VacancyHandler {
-	h := &VacancyHandler{router: router}
+type HandlerDI struct {
+	Router     fiber.Router
+	Repository IRepository
+}
+
+type Handler struct {
+	router     fiber.Router
+	repository IRepository
+}
+
+func NewHandler(di HandlerDI) *Handler {
+	h := &Handler{
+		router:     di.Router,
+		repository: di.Repository,
+	}
 	vacancyGroup := h.router.Group("/vacancy")
 	vacancyGroup.Post("/", h.createVacancy)
 	return h
 }
 
-func (h *VacancyHandler) createVacancy(c *fiber.Ctx) error {
+func (h *Handler) createVacancy(c *fiber.Ctx) error {
 	form := VacancyCreateForm{
 		Email:    c.FormValue("email"),
 		Role:     c.FormValue("role"),

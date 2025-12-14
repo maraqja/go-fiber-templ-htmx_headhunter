@@ -8,6 +8,7 @@ import (
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/home"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/logger"
+	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/postgres"
 	"github.com/rs/zerolog/log"
 )
 
@@ -65,8 +66,26 @@ func main() {
 	app.Use(recover.New())
 	_ = config.NewDatabaseConfig()
 
-	home.NewHomeHandler(app)
-	vacancy.NewVacancyHandler(app)
+	databaseConfig := config.NewDatabaseConfig()
+	pgpool, err := postgres.NewPool(&postgres.Config{
+		URL: databaseConfig.Url,
+	})
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg("Failed to create database pool")
+		panic(err)
+	}
+	defer pgpool.Close()
 
+	home.NewHomeHandler(app)
+
+	vacancyRepo := vacancy.NewPostgresRepository(vacancy.RepositoryDI{
+		DB: pgpool,
+	})
+	vacancy.NewHandler(vacancy.HandlerDI{
+		Router:     app,
+		Repository: vacancyRepo,
+	})
 	app.Listen(":3000")
 }

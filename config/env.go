@@ -56,12 +56,12 @@ func getBoolEnv(key string, defaultValue bool) (bool, error) {
 }
 
 type DatabaseConfig struct {
-	url string
+	Url string
 }
 
 func NewDatabaseConfig() *DatabaseConfig {
 	return &DatabaseConfig{
-		url: getStringEnv("DATABASE_URL", ""),
+		Url: getStringEnv("DATABASE_URL", ""),
 	}
 }
 
