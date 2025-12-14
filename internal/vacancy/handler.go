@@ -25,12 +25,22 @@ func NewVacancyHandler(router fiber.Router) *VacancyHandler {
 
 func (h *VacancyHandler) createVacancy(c *fiber.Ctx) error {
 	form := VacancyCreateForm{
-		Email: c.FormValue("email"),
+		Email:    c.FormValue("email"),
+		Role:     c.FormValue("role"),
+		Company:  c.FormValue("company"),
+		Salary:   c.FormValue("salary"),
+		Type:     c.FormValue("type"),
+		Location: c.FormValue("location"),
 	}
 	errors := validate.Validate(
 		&validators.EmailIsPresent{Name: "email", Field: form.Email},
+		&validators.StringIsPresent{Name: "role", Field: form.Role},
+		&validators.StringIsPresent{Name: "company", Field: form.Company},
+		&validators.StringIsPresent{Name: "salary", Field: form.Salary},
+		&validators.StringIsPresent{Name: "type", Field: form.Type},
+		&validators.StringIsPresent{Name: "location", Field: form.Location},
 	)
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Second) // для дебага лоадера
 	var component templ.Component
 	if len(errors.Errors) > 0 {
 		component = components.Notification(validator.FormatErrors(errors), components.NotificationStatusError)
