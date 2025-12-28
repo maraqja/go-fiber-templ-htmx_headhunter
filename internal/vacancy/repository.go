@@ -45,3 +45,20 @@ func (r *PostgresRepository) CreateVacancy(ctx context.Context, form VacancyCrea
 	}
 	return nil
 }
+
+func (r *PostgresRepository) GetVacancies(ctx context.Context) ([]Vacancy, error) {
+	query := `SELECT * FROM vacancies`
+	rows, err := r.db.Query(ctx, query)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("Failed to get vacancies")
+		return nil, err
+	}
+	defer rows.Close()
+
+	vacancies, err := pgx.CollectRows(rows, pgx.RowToStructByName[Vacancy])
+	if err != nil {
+		r.logger.Error().Err(err).Msg("Failed to collect rows")
+		return nil, err
+	}
+	return vacancies, nil
+}

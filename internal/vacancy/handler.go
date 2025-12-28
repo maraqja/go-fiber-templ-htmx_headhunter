@@ -15,6 +15,7 @@ import (
 
 type IRepository interface {
 	CreateVacancy(ctx context.Context, form VacancyCreateForm) error
+	GetVacancies(ctx context.Context) ([]Vacancy, error)
 }
 
 type HandlerDI struct {
@@ -34,7 +35,19 @@ func NewHandler(di HandlerDI) *Handler {
 	}
 	vacancyGroup := h.router.Group("/vacancy")
 	vacancyGroup.Post("/", h.createVacancy)
+	vacancyGroup.Get("/", h.getVacancies)
 	return h
+}
+
+func (h *Handler) getVacancies(c *fiber.Ctx) error {
+	vacancies, err := h.repository.GetVacancies(c.Context())
+	if err != nil {
+		component := components.Notification(err.Error(), components.NotificationStatusError)
+		return templadapter.Render(c, component, http.StatusInternalServerError)
+	}
+	return c.JSON(vacancies)
+	// component := components.VacancyCards(vacancies)
+	// return templadapter.Render(c, component, http.StatusOK)
 }
 
 func (h *Handler) createVacancy(c *fiber.Ctx) error {
