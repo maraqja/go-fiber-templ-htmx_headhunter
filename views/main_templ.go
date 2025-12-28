@@ -118,6 +118,7 @@ func Main(vacancies []vacancy.Vacancy) templ.Component {
 						Salary:      vacancy.Salary,
 						CompanyType: vacancy.Type,
 						Company:     vacancy.Company,
+						Createdat:   vacancy.CreatedAt,
 					}).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err

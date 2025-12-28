@@ -47,7 +47,7 @@ func (r *PostgresRepository) CreateVacancy(ctx context.Context, form VacancyCrea
 }
 
 func (r *PostgresRepository) GetVacancies(ctx context.Context) ([]Vacancy, error) {
-	query := `SELECT * FROM vacancies`
+	query := `SELECT * FROM vacancies ORDER BY created_at DESC`
 	rows, err := r.db.Query(ctx, query)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("Failed to get vacancies")
