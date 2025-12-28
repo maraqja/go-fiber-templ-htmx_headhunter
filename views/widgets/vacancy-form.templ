@@ -5,7 +5,7 @@ import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 templ VacancyForm() {
 	@VacancyFormStyle()
 	<div class="vacancy-form" hx-ext="response-targets"> // получаем возможность обрабатывать не только успешные, но и ошибочные запросы с помощью hx-target-error
-		@components.Title2("Опубликовать вакансию")
+		@components.Title2("Опубликовать вакансию", true)
 		<div id="vacancy-result"></div>
 		<p class="vacancy-form__text">Введите все необходимые данные для публикации</p>
 		<form 

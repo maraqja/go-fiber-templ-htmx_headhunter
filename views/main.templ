@@ -28,19 +28,8 @@ templ Main(vacancies []vacancy.Vacancy) { // но лучше использов�
 			@layout.Header() {
 				@components.Title( "Найди работы своей мечты")
 				@components.SubTitle( "Простой поиск работы")
-				<div>
-					for _, vacancy := range vacancies {
-						@components.VacancyCard(components.VacancyCardProps{
-							Email: vacancy.Email,
-							Location: vacancy.Location,
-							Salary: vacancy.Salary,
-							CompanyType: vacancy.Type,
-							Company: vacancy.Company,
-							Createdat: vacancy.CreatedAt,
-						})
-					}
-				</div>
 			}
+			@widgets.VacancyList(vacancies)
 			<div class="main__submit-form">
 				@widgets.VacancyForm()
 			</div>
