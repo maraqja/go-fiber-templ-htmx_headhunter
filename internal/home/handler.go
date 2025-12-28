@@ -2,6 +2,8 @@ package home
 
 import (
 	"context"
+	"fmt"
+	"math"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -39,6 +41,10 @@ func NewHomeHandler(di HandlerDI) *HomeHandler {
 func (h *HomeHandler) home(c *fiber.Ctx) error {
 	limit := c.QueryInt("limit", DefaultLimit)
 	page := c.QueryInt("page", 1)
+
+	if limit < 1 || page < 1 {
+		return c.Redirect(fmt.Sprintf("/?page=1&limit=%d", DefaultLimit), http.StatusFound)
+	}
 	offset := (page - 1) * limit
 	count, err := h.repository.GetVacanciesCount(c.Context())
 	if err != nil {
@@ -50,6 +56,6 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
 		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
-	component := views.Main(vacancies, count, page)
+	component := views.Main(vacancies, int(math.Ceil(float64(count/limit))), page)
 	return templadapter.Render(c, component, http.StatusOK)
 }

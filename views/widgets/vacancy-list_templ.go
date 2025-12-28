@@ -63,43 +63,53 @@ func VacancyList(vacancies []vacancy.Vacancy, pagesCount int, currentPage int) t
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div class=\"vacancy-list__pagination\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div class=\"vacancy-list__paginaton\"><div class=\"vacancy-list__paginaton-item\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for i := 1; i <= pagesCount; i++ {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<a href=\"")
+		if currentPage != 1 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<img src=\"/static/assets/chevron-left.svg\" alt=\"Стрелка влево\"> <a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 templ.SafeURL
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("?page=%d", i)))
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/?page=%d", currentPage-1)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/widgets/vacancy-list.templ`, Line: 28, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/widgets/vacancy-list.templ`, Line: 30, Col: 70}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">Предыдущие</a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(i)
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div><div class=\"vacancy-list__paginaton-item\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if currentPage != pagesCount {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/widgets/vacancy-list.templ`, Line: 28, Col: 58}
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 templ.SafeURL
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/?page=%d", currentPage+1)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/widgets/vacancy-list.templ`, Line: 35, Col: 70}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\">Следующие</a> <img src=\"/static/assets/chevron-right.svg\" alt=\"Стрелка справо\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -128,7 +138,7 @@ func VacancyListStyle() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<style>\n\t.vacancy-list__wrapper {\n\t\twidth: 100%;\n\t\tmax-width: 1296px;\n\t\tmargin: 0 auto;\n\t\tpadding: 60px 0;\n\t}\n\t.vacancy-list__wrapper p {\n\t\tmargin-bottom: 60px;\n\t}\n\t.vacancy-list {\n\t\tdisplay: flex;\n\t\talign-items: center;\n\t\tflex-direction: column;\n\t\tgap: 24px;\n\t}\n\t.vacancy-list__pagination {\n\t\tdisplay: flex;\n\t\tjustify-content: center;\n\t\tmargin-top: 10px;\n\t\tgap: 10px;\n\t\ta {\n\t\t\ttext-decoration: none;\n\t\t\tcolor: var(--color-black);\n\t\t\tpadding: 10px 20px;\n\t\t\tborder: 1px solid var(--color-black);\n\t\t\tborder-radius: 5px;\n\t\t}\n\t\ta:hover {\n\t\t\tbackground-color: var(--color-black);\n\t\t\tcolor: var(--color-white);\n\t\t}\n\t}\n</style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<style>\n\t.vacancy-list__wrapper {\n\t\twidth: 100%;\n\t\tmax-width: 1296px;\n\t\tmargin: 0 auto;\n\t\tpadding: 60px 0;\n\t}\n\t.vacancy-list__wrapper p {\n\t\tmargin-bottom: 60px;\n\t}\n\t.vacancy-list {\n\t\tdisplay: flex;\n\t\talign-items: center;\n\t\tflex-direction: column;\n\t\tgap: 24px;\n\t}\n\n\t.vacancy-list__paginaton {\n\t\tdisplay: flex;\n\t\tjustify-content: space-between;\n\t\tgap: 24px;\n\t}\n\t.vacancy-list__paginaton-item {\n\t\tdisplay: flex;\n\t\tgap: 8px;\n\t\talign-items: center;\n\t}\n\t.vacancy-list__paginaton-item a {\n\t\ttext-decoration: none;\n\t\tcolor: #6C757D;\n\t}\n\t.vacancy-list__paginaton-item a:hover {\n\t\tcolor: #545a60;\n\t}\n</style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

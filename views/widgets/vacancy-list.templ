@@ -23,10 +23,19 @@ templ VacancyList(vacancies []vacancy.Vacancy, pagesCount int, currentPage int) 
 				})
 			}
 		</div>
-		<div class="vacancy-list__pagination">
-			for i := 1; i <= pagesCount; i++ {
-				<a href={templ.SafeURL(fmt.Sprintf("?page=%d", i))}>{i}</a>
-			}
+			<div class="vacancy-list__paginaton">
+			<div class="vacancy-list__paginaton-item">
+				if currentPage != 1 {
+					<img src="/static/assets/chevron-left.svg" alt="Стрелка влево" />
+					<a href={templ.SafeURL(fmt.Sprintf("/?page=%d", currentPage - 1))}>Предыдущие</a>
+				}
+			</div>
+			<div class="vacancy-list__paginaton-item">
+				if currentPage != pagesCount {
+					<a href={templ.SafeURL(fmt.Sprintf("/?page=%d", currentPage + 1))}>Следующие</a>
+					<img src="/static/assets/chevron-right.svg" alt="Стрелка справо" />
+				}
+			</div>
 		</div>
 	</div>
 }
@@ -48,22 +57,23 @@ templ VacancyListStyle() {
 		flex-direction: column;
 		gap: 24px;
 	}
-	.vacancy-list__pagination {
+
+	.vacancy-list__paginaton {
 		display: flex;
-		justify-content: center;
-		margin-top: 10px;
-		gap: 10px;
-		a {
-			text-decoration: none;
-			color: var(--color-black);
-			padding: 10px 20px;
-			border: 1px solid var(--color-black);
-			border-radius: 5px;
-		}
-		a:hover {
-			background-color: var(--color-black);
-			color: var(--color-white);
-		}
+		justify-content: space-between;
+		gap: 24px;
+	}
+	.vacancy-list__paginaton-item {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+	.vacancy-list__paginaton-item a {
+		text-decoration: none;
+		color: #6C757D;
+	}
+	.vacancy-list__paginaton-item a:hover {
+		color: #545a60;
 	}
 </style>
 }
