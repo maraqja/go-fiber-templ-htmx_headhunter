@@ -4,11 +4,19 @@ import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 
 templ VacancyForm() {
 	@VacancyFormStyle()
-	<div class="vacancy-form">
+	<div class="vacancy-form" hx-ext="response-targets"> // получаем возможность обрабатывать не только успешные, но и ошибочные запросы с помощью hx-target-error
 		@components.Title2("Опубликовать вакансию")
 		<div id="vacancy-result"></div>
 		<p class="vacancy-form__text">Введите все необходимые данные для публикации</p>
-		<form hx-post="/vacancy" hx-trigger="submit" hx-target="#vacancy-result" hx-swap="innerHTML swap:1s"> // swap:1s добавляет в элементу класс htmx-swapping на заданное время
+		<form 
+			hx-post="/vacancy" 
+			hx-trigger="submit" 
+			hx-target="#vacancy-result"
+			hx-target-error="#vacancy-result"
+			hx-swap="innerHTML"
+			hx-on::after-request="console.log(event); if (event.detail.xhr && event.detail.xhr.status >= 200 && event.detail.xhr.status < 300) { this.reset() }"
+			> 
+			// this - форма, reset() - метод для сброса формы (он есть у всех форм)
 			<div class="vacancy-form__inputs">
 				@components.Input(components.InputProps{
 				Name: "role",

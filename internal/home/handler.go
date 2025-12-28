@@ -1,6 +1,8 @@
 package home
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	templadapter "github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/templ_adapter"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views"
@@ -18,5 +20,5 @@ func NewHomeHandler(router fiber.Router) *HomeHandler {
 
 func (h *HomeHandler) home(c *fiber.Ctx) error {
 	component := views.Main()
-	return templadapter.Render(c, component)
+	return templadapter.Render(c, component, http.StatusOK)
 }

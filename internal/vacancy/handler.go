@@ -1,7 +1,8 @@
 package vacancy
 
 import (
-	"time"
+	"context"
+	"net/http"
 
 	"github.com/a-h/templ"
 	"github.com/gobuffalo/validate"
@@ -13,7 +14,7 @@ import (
 )
 
 type IRepository interface {
-	CreateVacancy(form VacancyCreateForm)
+	CreateVacancy(ctx context.Context, form VacancyCreateForm) error
 }
 
 type HandlerDI struct {
@@ -53,12 +54,16 @@ func (h *Handler) createVacancy(c *fiber.Ctx) error {
 		&validators.StringIsPresent{Name: "type", Field: form.Type},
 		&validators.StringIsPresent{Name: "location", Field: form.Location},
 	)
-	time.Sleep(1 * time.Second) // для дебага лоадера
 	var component templ.Component
 	if len(errors.Errors) > 0 {
 		component = components.Notification(validator.FormatErrors(errors), components.NotificationStatusError)
-		return templadapter.Render(c, component)
+		return templadapter.Render(c, component, http.StatusBadRequest)
+	}
+	err := h.repository.CreateVacancy(c.Context(), form)
+	if err != nil {
+		component = components.Notification(err.Error(), components.NotificationStatusError)
+		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
 	component = components.Notification("Vacancy created", components.NotificationStatusSuccess)
-	return templadapter.Render(c, component)
+	return templadapter.Render(c, component, http.StatusOK)
 }
