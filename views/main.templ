@@ -18,7 +18,7 @@ templ MainStyle() {
 </style>
 }
 
-templ Main(vacancies []vacancy.Vacancy) { // но лучше использовать отдельную структуру для props, не зависящую от vacancy.Vacancy
+templ Main(vacancies []vacancy.Vacancy, pagesCount int, currentPage int) { // но лучше использовать отдельную структуру для props, не зависящую от vacancy.Vacancy
 	@MainStyle()
 	@layout.Layout(layout.LayoutProps{
 		Title: "Headhunter",
@@ -29,7 +29,7 @@ templ Main(vacancies []vacancy.Vacancy) { // но лучше использов�
 				@components.Title( "Найди работы своей мечты")
 				@components.SubTitle( "Простой поиск работы")
 			}
-			@widgets.VacancyList(vacancies)
+			@widgets.VacancyList(vacancies, pagesCount, currentPage)
 			<div class="main__submit-form">
 				@widgets.VacancyForm()
 			</div>

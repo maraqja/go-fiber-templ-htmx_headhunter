@@ -22,6 +22,7 @@ type HandlerDI struct {
 
 type IRepository interface {
 	GetVacancies(ctx context.Context, limit int, offset int) ([]vacancy.Vacancy, error)
+	GetVacanciesCount(ctx context.Context) (int, error)
 }
 
 type HomeHandler struct {
@@ -39,11 +40,16 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 	limit := c.QueryInt("limit", DefaultLimit)
 	page := c.QueryInt("page", 1)
 	offset := (page - 1) * limit
+	count, err := h.repository.GetVacanciesCount(c.Context())
+	if err != nil {
+		component := components.Notification(err.Error(), components.NotificationStatusError)
+		return templadapter.Render(c, component, http.StatusInternalServerError)
+	}
 	vacancies, err := h.repository.GetVacancies(c.Context(), limit, offset)
 	if err != nil {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
 		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
-	component := views.Main(vacancies)
+	component := views.Main(vacancies, count, page)
 	return templadapter.Render(c, component, http.StatusOK)
 }

@@ -2,9 +2,10 @@ package widgets
 
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
+import "fmt"
 
 
-templ VacancyList(vacancies []vacancy.Vacancy) {
+templ VacancyList(vacancies []vacancy.Vacancy, pagesCount int, currentPage int) {
 @VacancyListStyle()
 	<div class="vacancy-list__wrapper">
 		@components.Title2("Последние вакансии", false)
@@ -20,6 +21,11 @@ templ VacancyList(vacancies []vacancy.Vacancy) {
 					Createdat: vacancy.CreatedAt,
 					Role: vacancy.Role,
 				})
+			}
+		</div>
+		<div class="vacancy-list__pagination">
+			for i := 1; i <= pagesCount; i++ {
+				<a href={templ.SafeURL(fmt.Sprintf("?page=%d", i))}>{i}</a>
 			}
 		</div>
 	</div>
@@ -41,6 +47,23 @@ templ VacancyListStyle() {
 		align-items: center;
 		flex-direction: column;
 		gap: 24px;
+	}
+	.vacancy-list__pagination {
+		display: flex;
+		justify-content: center;
+		margin-top: 10px;
+		gap: 10px;
+		a {
+			text-decoration: none;
+			color: var(--color-black);
+			padding: 10px 20px;
+			border: 1px solid var(--color-black);
+			border-radius: 5px;
+		}
+		a:hover {
+			background-color: var(--color-black);
+			color: var(--color-white);
+		}
 	}
 </style>
 }

@@ -66,3 +66,15 @@ func (r *PostgresRepository) GetVacancies(ctx context.Context, limit int, offset
 	}
 	return vacancies, nil
 }
+
+func (r *PostgresRepository) GetVacanciesCount(ctx context.Context) (int, error) {
+	query := `SELECT COUNT(*) FROM vacancies`
+	row := r.db.QueryRow(ctx, query)
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("Failed to get vacancies count")
+		return 0, err
+	}
+	return count, nil
+}
