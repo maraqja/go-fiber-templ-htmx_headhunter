@@ -11,13 +11,17 @@ import (
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 )
 
+const (
+	DefaultLimit = 2
+)
+
 type HandlerDI struct {
 	Router     fiber.Router
 	Repository IRepository
 }
 
 type IRepository interface {
-	GetVacancies(ctx context.Context) ([]vacancy.Vacancy, error)
+	GetVacancies(ctx context.Context, limit int, offset int) ([]vacancy.Vacancy, error)
 }
 
 type HomeHandler struct {
@@ -32,14 +36,14 @@ func NewHomeHandler(di HandlerDI) *HomeHandler {
 }
 
 func (h *HomeHandler) home(c *fiber.Ctx) error {
-
-	vacancies, err := h.repository.GetVacancies(c.Context())
+	limit := c.QueryInt("limit", DefaultLimit)
+	page := c.QueryInt("page", 1)
+	offset := (page - 1) * limit
+	vacancies, err := h.repository.GetVacancies(c.Context(), limit, offset)
 	if err != nil {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
 		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
-	// component := components.VacancyCards(vacancies)
-	// return templadapter.Render(c, component, http.StatusOK)
 	component := views.Main(vacancies)
 	return templadapter.Render(c, component, http.StatusOK)
 }

@@ -15,7 +15,7 @@ import (
 
 type IRepository interface {
 	CreateVacancy(ctx context.Context, form VacancyCreateForm) error
-	GetVacancies(ctx context.Context) ([]Vacancy, error)
+	GetVacancies(ctx context.Context, limit int, offset int) ([]Vacancy, error)
 }
 
 type HandlerDI struct {

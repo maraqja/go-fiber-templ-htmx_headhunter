@@ -46,9 +46,13 @@ func (r *PostgresRepository) CreateVacancy(ctx context.Context, form VacancyCrea
 	return nil
 }
 
-func (r *PostgresRepository) GetVacancies(ctx context.Context) ([]Vacancy, error) {
-	query := `SELECT * FROM vacancies ORDER BY created_at DESC`
-	rows, err := r.db.Query(ctx, query)
+func (r *PostgresRepository) GetVacancies(ctx context.Context, limit int, offset int) ([]Vacancy, error) {
+	query := `SELECT * FROM vacancies ORDER BY created_at DESC LIMIT @limit OFFSET @offset`
+	args := pgx.NamedArgs{
+		"limit":  limit,
+		"offset": offset,
+	}
+	rows, err := r.db.Query(ctx, query, args)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("Failed to get vacancies")
 		return nil, err
