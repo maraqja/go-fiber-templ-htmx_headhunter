@@ -84,7 +84,7 @@ func VacancyCard(props VacancyCardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div class=\"vacancy-card__footer\"><div class=\"vacancy-card__stats\"><div class=\"vacancy-card__stat\"><img src=\"/public/icons/company-type.svg\" alt=\"Иконка портфеля\"> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div class=\"vacancy-card__footer\"><div class=\"vacancy-card__stats\"><div class=\"vacancy-card__stat\"><img src=\"/static/assets/company-type.svg\" alt=\"Иконка портфеля\"> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -97,7 +97,7 @@ func VacancyCard(props VacancyCardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"vacancy-card__stat\"><img src=\"/public/icons/salary.svg\" alt=\"Иконка кошелька\"> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"vacancy-card__stat\"><img src=\"/static/assets/salary.svg\" alt=\"Иконка кошелька\"> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -110,7 +110,7 @@ func VacancyCard(props VacancyCardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><div class=\"vacancy-card__stat\"><img src=\"/public/icons/location.svg\" alt=\"Иконка карты\"> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><div class=\"vacancy-card__stat\"><img src=\"/static/assets/location.svg\" alt=\"Иконка карты\"> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

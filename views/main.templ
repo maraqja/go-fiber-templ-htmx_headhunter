@@ -3,7 +3,7 @@ package views
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/layout"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/widgets"
-import "time"
+import "github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 
 
 templ MainStyle() {
@@ -18,7 +18,7 @@ templ MainStyle() {
 </style>
 }
 
-templ Main() {
+templ Main(vacancies []vacancy.Vacancy) { // но лучше использовать отдельную структуру для props, не зависящую от vacancy.Vacancy
 	@MainStyle()
 	@layout.Layout(layout.LayoutProps{
 		Title: "Headhunter",
@@ -28,15 +28,17 @@ templ Main() {
 			@layout.Header() {
 				@components.Title( "Найди работы своей мечты")
 				@components.SubTitle( "Простой поиск работы")
-				@components.VacancyCard(components.VacancyCardProps{
-					Email: "",
-					Location: "Онлайн",
-					Salary: "10000$",
-					CompanyType: "IT",
-					Company: "PurpleCode",
-					Createdat: time.Now(),
-					Role: "Копирайтер",
-				})
+				<div>
+					for _, vacancy := range vacancies {
+						@components.VacancyCard(components.VacancyCardProps{
+							Email: vacancy.Email,
+							Location: vacancy.Location,
+							Salary: vacancy.Salary,
+							CompanyType: vacancy.Type,
+							Company: vacancy.Company,
+						})
+					}
+				</div>
 			}
 			<div class="main__submit-form">
 				@widgets.VacancyForm()

@@ -78,10 +78,15 @@ func main() {
 	}
 	defer pgpool.Close()
 
-	home.NewHomeHandler(app)
-
+	// -- Repositories --
 	vacancyRepo := vacancy.NewPostgresRepository(vacancy.RepositoryDI{
 		DB: pgpool,
+	})
+
+	// -- Handlers --
+	home.NewHomeHandler(home.HandlerDI{
+		Router:     app,
+		Repository: vacancyRepo,
 	})
 	vacancy.NewHandler(vacancy.HandlerDI{
 		Router:     app,
