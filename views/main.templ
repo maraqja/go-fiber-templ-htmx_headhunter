@@ -3,6 +3,7 @@ package views
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/layout"
 import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/widgets"
+import "time"
 
 
 templ MainStyle() {
@@ -27,6 +28,15 @@ templ Main() {
 			@layout.Header() {
 				@components.Title( "Найди работы своей мечты")
 				@components.SubTitle( "Простой поиск работы")
+				@components.VacancyCard(components.VacancyCardProps{
+					Email: "",
+					Location: "Онлайн",
+					Salary: "10000$",
+					CompanyType: "IT",
+					Company: "PurpleCode",
+					Createdat: time.Now(),
+					Role: "Копирайтер",
+				})
 			}
 			<div class="main__submit-form">
 				@widgets.VacancyForm()
