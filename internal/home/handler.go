@@ -35,6 +35,7 @@ type HomeHandler struct {
 func NewHomeHandler(di HandlerDI) *HomeHandler {
 	h := &HomeHandler{router: di.Router, repository: di.Repository}
 	h.router.Get("/", h.home)
+	h.router.Get("/login", h.login)
 	return h
 }
 
@@ -57,5 +58,10 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
 	component := views.Main(vacancies, int(math.Ceil(float64(count/limit))), page)
+	return templadapter.Render(c, component, http.StatusOK)
+}
+
+func (h *HomeHandler) login(c *fiber.Ctx) error {
+	component := views.Login()
 	return templadapter.Render(c, component, http.StatusOK)
 }

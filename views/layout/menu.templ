@@ -6,9 +6,11 @@ import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
 templ Menu() {
 	@MenuStyle()
 	<div class="menu">
-		<img src="/static/assets/logo.svg" alt="Logo">
+		<a href="/">
+			<img src="/public/images/logo.svg" />
+		</a>
 		<div class="menu__right">
-			<a class="menu__right-link">Войти</a>
+			<a class="menu__right-link" href="/login">Войти</a>
 			@components.LinkButton("/register") {
 				<span>Зарегистрироваться</span>
 			}
@@ -28,6 +30,7 @@ templ MenuStyle() {
 			padding: 20px 0;
 			max-width: 1200px;
 			width: 100%;
+			margin-bottom: 100px;
 		}
 		.menu__right {
 			display: flex;
