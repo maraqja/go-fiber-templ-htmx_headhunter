@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/config"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/home"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
@@ -78,6 +79,7 @@ func main() {
 	}
 	defer pgpool.Close()
 
+	store := session.New()
 	// -- Repositories --
 	vacancyRepo := vacancy.NewPostgresRepository(vacancy.RepositoryDI{
 		DB: pgpool,
@@ -87,6 +89,7 @@ func main() {
 	home.NewHomeHandler(home.HandlerDI{
 		Router:     app,
 		Repository: vacancyRepo,
+		Store:      store,
 	})
 	vacancy.NewHandler(vacancy.HandlerDI{
 		Router:     app,

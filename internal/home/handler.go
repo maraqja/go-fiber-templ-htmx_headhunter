@@ -7,19 +7,24 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 	templadapter "github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/templ_adapter"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 const (
 	DefaultLimit = 2
+	UserIDKey    = "user_id"
 )
 
 type HandlerDI struct {
 	Router     fiber.Router
 	Repository IRepository
+	Store      *session.Store
 }
 
 type IRepository interface {
@@ -30,10 +35,13 @@ type IRepository interface {
 type HomeHandler struct {
 	router     fiber.Router
 	repository IRepository
+	store      *session.Store
+	logger     *zerolog.Logger
 }
 
 func NewHomeHandler(di HandlerDI) *HomeHandler {
-	h := &HomeHandler{router: di.Router, repository: di.Repository}
+	logger := log.Logger.With().Str("component", "HomeHandler").Logger()
+	h := &HomeHandler{router: di.Router, repository: di.Repository, store: di.Store, logger: &logger}
 	h.router.Get("/", h.home)
 	h.router.Get("/login", h.login)
 	return h
@@ -52,6 +60,20 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
 		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
+
+	// Получаем сессию: читает session_id из Cookie, загружает данные из storage
+	session, err := h.store.Get(c)
+	if err != nil {
+		return c.Redirect("/login", http.StatusUnauthorized)
+	}
+	// Проверяем наличие user_id в сессии
+	userID, ok := session.Get(UserIDKey).(string)
+	if !ok || userID == "" {
+		h.logger.Info().Msg("User ID not found in session")
+		// return c.Redirect("/login", http.StatusUnauthorized)
+	} else {
+		h.logger.Info().Str("user_id", userID).Msg("User authenticated")
+	}
 	vacancies, err := h.repository.GetVacancies(c.Context(), limit, offset)
 	if err != nil {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
@@ -63,5 +85,17 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 
 func (h *HomeHandler) login(c *fiber.Ctx) error {
 	component := views.Login()
+
+	// Получаем сессию: читает session_id из Cookie или создаёт новую
+	session, err := h.store.Get(c)
+	if err != nil {
+		return c.Redirect("/login", http.StatusInternalServerError)
+	}
+	// Сохраняем user_id в памяти объекта сессии (ещё не отправлено клиенту)
+	session.Set(UserIDKey, "1") // сохраняем как string для единообразия
+	// Сохраняем в storage и отправляем Set-Cookie браузеру
+	if err := session.Save(); err != nil {
+		return c.Redirect("/login", http.StatusInternalServerError)
+	}
 	return templadapter.Render(c, component, http.StatusOK)
 }
