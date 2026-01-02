@@ -76,6 +76,10 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 	} else {
 		h.logger.Info().Str("user_id", userID).Msg("User authenticated")
 	}
+	var email string = ""
+	email, ok = session.Get("email").(string)
+	c.Locals("email", email)
+
 	vacancies, err := h.repository.GetVacancies(c.Context(), limit, offset)
 	if err != nil {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
@@ -99,6 +103,11 @@ func (h *HomeHandler) login(c *fiber.Ctx) error {
 	if err := session.Save(); err != nil {
 		return c.Redirect("/login", http.StatusInternalServerError)
 	}
+	userEmail := ""
+	if email, ok := session.Get("email").(string); ok {
+		userEmail = email
+	}
+	c.Locals("email", userEmail)
 	return templadapter.Render(c, component, http.StatusOK)
 }
 
