@@ -10,6 +10,7 @@ import (
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/home"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/logger"
+	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/middleware"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/postgres"
 	"github.com/rs/zerolog/log"
 )
@@ -66,6 +67,7 @@ func main() {
 		Logger: &log.Logger,
 	}))
 	app.Use(recover.New())
+
 	_ = config.NewDatabaseConfig()
 
 	databaseConfig := config.NewDatabaseConfig()
@@ -86,6 +88,7 @@ func main() {
 			Table: "sessions",
 		}),
 	})
+	app.Use(middleware.AuthMiddleware(store))
 	// -- Repositories --
 	vacancyRepo := vacancy.NewPostgresRepository(vacancy.RepositoryDI{
 		DB: pgpool,

@@ -8,7 +8,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/google/uuid"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
+	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/middleware"
 	templadapter "github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/templ_adapter"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
@@ -18,7 +20,6 @@ import (
 
 const (
 	DefaultLimit = 2
-	UserIDKey    = "user_id"
 )
 
 type HandlerDI struct {
@@ -63,23 +64,6 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 		return templadapter.Render(c, component, http.StatusInternalServerError)
 	}
 
-	// Получаем сессию: читает session_id из Cookie, загружает данные из storage
-	session, err := h.store.Get(c)
-	if err != nil {
-		return c.Redirect("/login", http.StatusUnauthorized)
-	}
-	// Проверяем наличие user_id в сессии
-	userID, ok := session.Get(UserIDKey).(string)
-	if !ok || userID == "" {
-		h.logger.Info().Msg("User ID not found in session")
-		// return c.Redirect("/login", http.StatusUnauthorized)
-	} else {
-		h.logger.Info().Str("user_id", userID).Msg("User authenticated")
-	}
-	var email string = ""
-	email, ok = session.Get("email").(string)
-	c.Locals("email", email)
-
 	vacancies, err := h.repository.GetVacancies(c.Context(), limit, offset)
 	if err != nil {
 		component := components.Notification(err.Error(), components.NotificationStatusError)
@@ -91,23 +75,6 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 
 func (h *HomeHandler) login(c *fiber.Ctx) error {
 	component := views.Login()
-
-	// Получаем сессию: читает session_id из Cookie или создаёт новую
-	session, err := h.store.Get(c)
-	if err != nil {
-		return c.Redirect("/login", http.StatusInternalServerError)
-	}
-	// Сохраняем user_id в памяти объекта сессии (ещё не отправлено клиенту)
-	session.Set(UserIDKey, "1") // сохраняем как string для единообразия
-	// Сохраняем в storage и отправляем Set-Cookie браузеру
-	if err := session.Save(); err != nil {
-		return c.Redirect("/login", http.StatusInternalServerError)
-	}
-	userEmail := ""
-	if email, ok := session.Get("email").(string); ok {
-		userEmail = email
-	}
-	c.Locals("email", userEmail)
 	return templadapter.Render(c, component, http.StatusOK)
 }
 
@@ -119,11 +86,14 @@ func (h *HomeHandler) apiLogin(c *fiber.Ctx) error { // Для мокового 
 	if form.Email == "a@a.ru" && form.Password == "1" { // Мок вместо проверки в БД
 		sess, err := h.store.Get(c)
 		if err != nil {
-			panic(err)
+			c.Response().Header.Add("Hx-Redirect", "/login")
+			return c.Redirect("/login", http.StatusInternalServerError)
 		}
-		sess.Set("email", form.Email)
+		sess.Set(middleware.EmailKey, form.Email)
+		sess.Set(middleware.UserIDKey, uuid.New().String())
 		if err := sess.Save(); err != nil {
-			panic(err)
+			c.Response().Header.Add("Hx-Redirect", "/login")
+			return c.Redirect("/login", http.StatusInternalServerError)
 		}
 		c.Response().Header.Add("Hx-Redirect", "/")
 		return c.Redirect("/", http.StatusOK)
