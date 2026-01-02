@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	postgresStorage "github.com/gofiber/storage/postgres/v3"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/config"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/home"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
@@ -79,7 +80,12 @@ func main() {
 	}
 	defer pgpool.Close()
 
-	store := session.New()
+	store := session.New(session.Config{
+		Storage: postgresStorage.New(postgresStorage.Config{
+			DB:    pgpool,
+			Table: "sessions",
+		}),
+	})
 	// -- Repositories --
 	vacancyRepo := vacancy.NewPostgresRepository(vacancy.RepositoryDI{
 		DB: pgpool,
