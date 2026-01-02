@@ -63,6 +63,7 @@ func main() {
 
 	app := fiber.New()
 	app.Static("/static", "./static")
+	app.Static("/robots.txt", "./static/robots.txt")
 
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
 		Logger: &log.Logger,
