@@ -1,0 +1,33 @@
+package widgets
+
+import "github.com/maraqja/go-fiber-templ-htmx_headhunter/views/components"
+
+
+templ LoginForm() {
+	@LoginFormStyle()
+	<form hx-post="/" hx-trigger="submit" class="login-form">
+		@components.Input(components.InputProps{
+			Name: "email",
+			Placeholder: "Email",
+		})
+		@components.Input(components.InputProps{
+			Name: "password",
+			Placeholder: "Пароль",
+		})
+		@components.SubmitButton() {
+			<div>Войти</div>
+		}
+	</form>
+}
+
+templ LoginFormStyle() {
+	<style>
+	.login-form {
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+		width: 100%;
+		max-width: 520px;
+	}
+	</style>
+}
