@@ -8,6 +8,7 @@ import (
 	postgresStorage "github.com/gofiber/storage/postgres/v3"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/config"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/home"
+	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/sitemap"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/internal/vacancy"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/logger"
 	"github.com/maraqja/go-fiber-templ-htmx_headhunter/pkg/middleware"
@@ -104,5 +105,7 @@ func main() {
 		Router:     app,
 		Repository: vacancyRepo,
 	})
+
+	sitemap.NewHandler(app)
 	app.Listen(":3000")
 }
