@@ -28,6 +28,10 @@ templ Layout(props LayoutProps) {
 			<link rel="apple-touch-icon" sizes="512x512" href="/static/favicon/favicon-512x512.png">
 			<link rel="manifest" href="/static/favicon/manifest.webmanifest" crossorigin="anonymous">
 			<meta name="description" content={props.Description}>
+
+			<meta property="og:title" content={props.Title}>
+			<meta property="og:description" content={props.Description}>
+
 		</head>
 		<body>
 			{ children... }
