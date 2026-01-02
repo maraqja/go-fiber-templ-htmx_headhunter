@@ -44,8 +44,8 @@ func NewHomeHandler(di HandlerDI) *HomeHandler {
 	h := &HomeHandler{router: di.Router, repository: di.Repository, store: di.Store, logger: &logger}
 	h.router.Get("/", h.home)
 	h.router.Get("/login", h.login)
-
 	h.router.Post("/api/login", h.apiLogin)
+	h.router.Post("/api/logout", h.apiLogout)
 	return h
 }
 
@@ -130,4 +130,20 @@ func (h *HomeHandler) apiLogin(c *fiber.Ctx) error { // Для мокового 
 	}
 	component := components.Notification("Неверный логин или пароль", components.NotificationStatusError)
 	return templadapter.Render(c, component, http.StatusBadRequest)
+}
+
+func (h *HomeHandler) apiLogout(c *fiber.Ctx) error {
+	session, err := h.store.Get(c)
+	if err != nil {
+		c.Response().Header.Add("Hx-Redirect", "/login")
+		return c.Redirect("/login", http.StatusInternalServerError)
+	}
+	// Destroy() удаляет всю сессию (все данные + из storage)
+	if err := session.Destroy(); err != nil {
+		c.Response().Header.Add("Hx-Redirect", "/login")
+		return c.Redirect("/login", http.StatusInternalServerError)
+	}
+	// Save() не нужен после Destroy(), так как Destroy() сам сохраняет изменения
+	c.Response().Header.Add("Hx-Redirect", "/")
+	return c.Redirect("/", http.StatusOK)
 }
