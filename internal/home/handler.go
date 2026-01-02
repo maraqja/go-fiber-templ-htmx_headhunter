@@ -44,6 +44,8 @@ func NewHomeHandler(di HandlerDI) *HomeHandler {
 	h := &HomeHandler{router: di.Router, repository: di.Repository, store: di.Store, logger: &logger}
 	h.router.Get("/", h.home)
 	h.router.Get("/login", h.login)
+
+	h.router.Post("/api/login", h.apiLogin)
 	return h
 }
 
@@ -98,4 +100,25 @@ func (h *HomeHandler) login(c *fiber.Ctx) error {
 		return c.Redirect("/login", http.StatusInternalServerError)
 	}
 	return templadapter.Render(c, component, http.StatusOK)
+}
+
+func (h *HomeHandler) apiLogin(c *fiber.Ctx) error { // Для мокового теста логина
+	form := LoginForm{
+		Email:    c.FormValue("email"),
+		Password: c.FormValue("password"),
+	}
+	if form.Email == "a@a.ru" && form.Password == "1" { // Мок вместо проверки в БД
+		sess, err := h.store.Get(c)
+		if err != nil {
+			panic(err)
+		}
+		sess.Set("email", form.Email)
+		if err := sess.Save(); err != nil {
+			panic(err)
+		}
+		c.Response().Header.Add("Hx-Redirect", "/")
+		return c.Redirect("/", http.StatusOK)
+	}
+	component := components.Notification("Неверный логин или пароль", components.NotificationStatusError)
+	return templadapter.Render(c, component, http.StatusBadRequest)
 }
